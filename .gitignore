@@ -1,2 +1,10 @@
 /node_modules
 /node_modules/*
+/node/node_modules
+/node/node_modules/*
+/node/images
+/node/images/*
+/node/aa
+/node/aa/*
+/node/image/
+/node/image/*
