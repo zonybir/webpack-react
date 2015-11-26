@@ -4,5 +4,5 @@ var Components = require ("./login-component.jsx");
 require('../less/base.less'),
 require('../less/login.less');
 ReactDOM.render(
-  <Components pl='enter your name' text='Next'/>,  document.getElementById('zony_app')
+  <Components />,  document.getElementById('zony_app')
 );

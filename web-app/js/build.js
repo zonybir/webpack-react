@@ -57,7 +57,7 @@
 	__webpack_require__(161),
 	__webpack_require__(165);
 	ReactDOM.render(
-	  React.createElement(Components, {pl: "enter your name", text: "Next"}),  document.getElementById('zony_app')
+	  React.createElement(Components, null),  document.getElementById('zony_app')
 	);
 
 /***/ },
@@ -19656,8 +19656,10 @@
 		getInitialState:function(){
 			return {
 				like:false,
+				signIn:true,
 				showErr:false,
-				err_info:''
+				err_info:'',
+				b:[1,2,3,4,5,6,7,8,9]
 			};
 		},
 		date:{
@@ -19670,6 +19672,13 @@
 			if(!this.date.userName) this.setState({showErr:true,err_info:'Please input your name.'});
 			else if(!this.checkuserNmae()) var a=0;
 		},
+		handSignUp:function(e){
+			console.log(e);
+			console.log(this);
+			this.render=this.pwd;
+			this.setState({showErr:false});
+			return this.state.signIn?this.setState({signIn:false}):this.setState({signIn:true});
+		},
 		checkuserNmae:function(){
 			if(this.date.userName == 'zonybir') {
 				this.setState({showErr:false,err_info:''})
@@ -19680,14 +19689,30 @@
 			}
 		},
 		render:function(){
-			var display = this.state.showErr ? 'show' : 'hide';
+			var display = this.state.showErr ? 'show' : 'hide',
+			 rule={};
+			rule= this.state.signIn?{placeholder:'enter your name',title:'without',signAs:'sign up',btn_text:'Next'}:{placeholder:'sign up name',title:'hava a',signAs:'sign in',btn_text:'Sign Up'};
 			return (
 				React.createElement("div", {className: "login-box"}, 
-					React.createElement("input", {onChange: this.handleInput, placeholder: this.props.pl}), 
-					React.createElement("button", {onClick: this.handleNextStep}, this.props.text), 
-					React.createElement("div", {className: display}, this.state.err_info)
+					React.createElement("input", {onChange: this.handleInput, placeholder: rule.placeholder}), 
+					React.createElement("button", {onClick: this.handleNextStep}, rule.btn_text), 
+					React.createElement("div", null, React.createElement("span", {className: display}, this.state.err_info)), 
+					React.createElement("p", null, React.createElement("span", null, rule.title, " account ?"), React.createElement("span", {onClick: this.handSignUp, className: "sign-sa"}, rule.signAs))
 				)
 			);
+		},
+		pwd:function(){
+			var bb=[1,2,3,4,5,6,7,8,9];
+			bb.map(function(){
+				console.log(arguments);
+			})
+			return(
+				React.createElement("div", {className: "login-box pwd-box"}, 
+					bb.map(function(value,index,arry){
+						return React.createElement("span", null, value)
+					})
+				)
+			)
 		}
 	});
 
@@ -19726,7 +19751,7 @@
 
 
 	// module
-	exports.push([module.id, "@charset \"utf-8\";\n/*********************************\n **@description  : base style\n **@author   \t\t : zony \n **@date     \t\t : 2016-09-08\n ********************************/\nbody,\nnav,\ndl,\ndt,\ndd,\np,\nh1,\nh2,\nh3,\nh4,\nul,\nol,\nli,\ninput,\nbutton,\ntextarea,\nheader,\nfooter {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  font: 16px/1.5 'Microsoft Yahei';\n  color: #333;\n  background: #fff;\n  -webkit-text-size-adjust: none;\n  min-width: 320px;\n}\nform {\n  display: inline;\n}\nul,\nol {\n  list-style: none;\n}\na {\n  text-decoration: none;\n  color: #1a1a1a;\n}\na:hover,\na:active,\na:focus {\n  color: #1c5aa2;\n  text-decoration: none;\n}\na:active {\n  color: #aaa;\n}\nbutton,\ninput,\nselect,\ntextarea {\n  font-size: 100%;\n  vertical-align: middle;\n  outline: none;\n}\ntextarea {\n  resize: none;\n}\nbutton,\ninput[type=\"button\"],\ninput[type=\"reset\"],\ninput[type=\"submit\"] {\n  cursor: pointer;\n  -webkit-appearance: button;\n  -moz-appearance: button;\n}\ninput:focus:-moz-placeholder,\ninput:focus::-webkit-input-placeholder {\n  color: transparent;\n}\nbutton::-moz-focus-inner,\ninput::-moz-focus-inner {\n  padding: 0;\n  border: 0;\n}\ntable {\n  border-collapse: collapse;\n  border-spacing: 0;\n}\nblockquote,\nq {\n  quotes: none;\n}\nblockquote:before,\nblockquote:after,\nq:before,\nq:after {\n  content: '';\n  content: none;\n}\nimg {\n  vertical-align: middle;\n  border: 0;\n  -ms-interpolation-mode: bicubic;\n}\nins {\n  text-decoration: none;\n}\ndel {\n  text-decoration: line-through;\n}\nheader,\nfooter,\narticle,\nsection,\nnav,\nmenu,\nhgroup {\n  display: block;\n  clear: all;\n}\n.fl {\n  float: left;\n}\n.fr {\n  float: right;\n}\n.hide {\n  display: none;\n}\n.show {\n  display: block;\n}\n.ellipsis {\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n.break {\n  word-break: break-all;\n  word-wrap: break-word;\n}\n.clearfix:before,\n.clearfix:after {\n  content: \"\";\n  display: table;\n}\n.clearfix:after {\n  clear: both;\n}\n.clearfix {\n  *zoom: 1;\n}\n", ""]);
+	exports.push([module.id, "@charset \"utf-8\";\n/*********************************\n **@description  : base style\n **@author   \t\t : zony \n **@date     \t\t : 2016-09-08\n ********************************/\nbody,\nnav,\ndl,\ndt,\ndd,\np,\nh1,\nh2,\nh3,\nh4,\nul,\nol,\nli,\ninput,\nbutton,\ntextarea,\nheader,\nfooter {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  font: 16px/1.5 'Microsoft Yahei';\n  color: #333;\n  background: #fff;\n  -webkit-text-size-adjust: none;\n  min-width: 320px;\n}\nform {\n  display: inline;\n}\nul,\nol {\n  list-style: none;\n}\na {\n  text-decoration: none;\n  color: #1a1a1a;\n}\na:hover,\na:active,\na:focus {\n  color: #1c5aa2;\n  text-decoration: none;\n}\na:active {\n  color: #aaa;\n}\nbutton,\ninput,\nselect,\ntextarea {\n  font-size: 100%;\n  vertical-align: middle;\n  outline: none;\n}\ntextarea {\n  resize: none;\n}\nbutton,\ninput[type=\"button\"],\ninput[type=\"reset\"],\ninput[type=\"submit\"] {\n  cursor: pointer;\n  -webkit-appearance: button;\n  -moz-appearance: button;\n}\ninput:focus:-moz-placeholder,\ninput:focus::-webkit-input-placeholder {\n  color: transparent;\n}\nbutton::-moz-focus-inner,\ninput::-moz-focus-inner {\n  padding: 0;\n  border: 0;\n}\ntable {\n  border-collapse: collapse;\n  border-spacing: 0;\n}\nblockquote,\nq {\n  quotes: none;\n}\nblockquote:before,\nblockquote:after,\nq:before,\nq:after {\n  content: '';\n  content: none;\n}\nimg {\n  vertical-align: middle;\n  border: 0;\n  -ms-interpolation-mode: bicubic;\n}\nins {\n  text-decoration: none;\n}\ndel {\n  text-decoration: line-through;\n}\nheader,\nfooter,\narticle,\nsection,\nnav,\nmenu,\nhgroup {\n  display: block;\n  clear: all;\n}\n.fl {\n  float: left;\n}\n.fr {\n  float: right;\n}\n.hide {\n  display: none !important;\n}\n.show {\n  display: block;\n}\n.ellipsis {\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n.break {\n  word-break: break-all;\n  word-wrap: break-word;\n}\n.clearfix:before,\n.clearfix:after {\n  content: \"\";\n  display: table;\n}\n.clearfix:after {\n  clear: both;\n}\n.clearfix {\n  *zoom: 1;\n}\n", ""]);
 
 	// exports
 
@@ -20076,7 +20101,7 @@
 
 
 	// module
-	exports.push([module.id, "html,\nbody {\n  width: 100%;\n  height: 100%;\n}\n#login-box {\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  overflow: hidden;\n}\n.center-box {\n  width: 100%;\n  max-width: 400px;\n  margin: 0 auto;\n  height: 300px;\n  position: relative;\n  top: 50%;\n  margin-top: -150px;\n}\n.login-box {\n  font-size: 14px;\n}\n.login-box input {\n  padding: 8px 5px;\n  width: 70%;\n}\n.login-box button {\n  width: 20%;\n  margin-left: 5%;\n  padding: 8px 5px;\n}\n.login-box div {\n  text-align: left;\n  padding-left: 10px;\n}\n", ""]);
+	exports.push([module.id, "html,\nbody {\n  width: 100%;\n  height: 100%;\n}\n#login-box {\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  overflow: hidden;\n}\n.center-box {\n  width: 100%;\n  max-width: 400px;\n  margin: 0 auto;\n  height: 300px;\n  position: relative;\n  top: 50%;\n  margin-top: -150px;\n}\n.login-box {\n  font-size: 14px;\n}\n.login-box input {\n  padding: 8px 5px;\n  width: 70%;\n}\n.login-box button {\n  width: 20%;\n  margin-left: 5%;\n  padding: 8px 5px;\n}\n.login-box div {\n  text-align: left;\n  color: #fff;\n  padding: 3px;\n  height: 27px;\n}\n.login-box div span {\n  display: inline-block;\n  padding: 3px 10px;\n  background-color: rgba(23, 23, 23, 0.5);\n}\n.login-box p {\n  text-align: right;\n}\n.login-box p .sign-sa {\n  cursor: pointer;\n  padding-left: 5px;\n  color: #1262F4;\n  display: inline-block;\n  width: 50px;\n}\n.pwd-box {\n  width: 300px;\n  height: 300px;\n  border: 1px solid #ccc;\n}\n.pwd-box span {\n  color: #000;\n  display: inline-block;\n  width: 60px;\n  height: 60px;\n  margin: 60px 0;\n}\n.pwd-box span:nth-child(3n+2) {\n  margin: 60px 60px;\n}\n", ""]);
 
 	// exports
 
