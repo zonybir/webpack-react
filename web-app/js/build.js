@@ -19673,8 +19673,6 @@
 			else if(!this.checkuserNmae()) var a=0;
 		},
 		handSignUp:function(e){
-			console.log(e);
-			console.log(this);
 			this.render=this.pwd;
 			this.setState({showErr:false});
 			return this.state.signIn?this.setState({signIn:false}):this.setState({signIn:true});
@@ -19687,6 +19685,54 @@
 				this.setState({showErr:true,err_info:'Please check your input name !'})
 				return false;
 			}
+		},
+		passwordKey:{
+			key:[],
+			status:false,
+			setKey:function(key){
+				this.key.push(key);
+			},
+			hasKey:function(key){
+				if(this.key.some(function(item,index,arry){
+					return item == key;
+				})) 
+				return true;
+				else{
+					this.setKey(key);
+					return false;
+				}
+			}
+		},
+		handlePwdSec:function(e){
+			if(!this.passwordKey.status) return;
+			if(this.passwordKey.hasKey(e.target.getAttribute('value'))) return;
+			//console.log(this.passwordKey.key);
+			
+		},
+		handlePwdStart:function(e){
+			this.passwordKey.status=true;
+			this.passwordKey.hasKey(e.target.getAttribute('value'));
+			this.lineDate.startPoint={
+				x:e.pageX,
+				y:e.pageY
+			};
+			//console.log(e.pageX+'---'+e.pageY);
+			
+		},
+		handleResetPwd:function(){
+			this.passwordKey.status=false;
+		},
+		lineDate:{
+			startPoint:{
+				x:0,
+				y:0
+			}
+		},
+		handleDrawLine:function(e){
+			if (!this.passwordKey.status) return;
+			var bx=e.pageX - this.lineDate.startPoint.x,
+			by=e.pageY = this.lineDate.startPoint.y;
+			console.log(bx+'---'+by);
 		},
 		render:function(){
 			var display = this.state.showErr ? 'show' : 'hide',
@@ -19702,14 +19748,11 @@
 			);
 		},
 		pwd:function(){
-			var bb=[1,2,3,4,5,6,7,8,9];
-			bb.map(function(){
-				console.log(arguments);
-			})
+			var bb=[1,2,3,4,5,6,7,8,9],t=this;
 			return(
-				React.createElement("div", {className: "login-box pwd-box"}, 
+				React.createElement("div", {className: "login-box pwd-box", onMouseUp: this.handleResetPwd, onMouseMove: this.handleDrawLine}, 
 					bb.map(function(value,index,arry){
-						return React.createElement("span", null, value)
+						return React.createElement("span", {className: "prohibitSelect", onMouseEnter: t.handlePwdSec, onMouseDown: t.handlePwdStart, value: value})
 					})
 				)
 			)
@@ -19751,7 +19794,7 @@
 
 
 	// module
-	exports.push([module.id, "@charset \"utf-8\";\n/*********************************\n **@description  : base style\n **@author   \t\t : zony \n **@date     \t\t : 2016-09-08\n ********************************/\nbody,\nnav,\ndl,\ndt,\ndd,\np,\nh1,\nh2,\nh3,\nh4,\nul,\nol,\nli,\ninput,\nbutton,\ntextarea,\nheader,\nfooter {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  font: 16px/1.5 'Microsoft Yahei';\n  color: #333;\n  background: #fff;\n  -webkit-text-size-adjust: none;\n  min-width: 320px;\n}\nform {\n  display: inline;\n}\nul,\nol {\n  list-style: none;\n}\na {\n  text-decoration: none;\n  color: #1a1a1a;\n}\na:hover,\na:active,\na:focus {\n  color: #1c5aa2;\n  text-decoration: none;\n}\na:active {\n  color: #aaa;\n}\nbutton,\ninput,\nselect,\ntextarea {\n  font-size: 100%;\n  vertical-align: middle;\n  outline: none;\n}\ntextarea {\n  resize: none;\n}\nbutton,\ninput[type=\"button\"],\ninput[type=\"reset\"],\ninput[type=\"submit\"] {\n  cursor: pointer;\n  -webkit-appearance: button;\n  -moz-appearance: button;\n}\ninput:focus:-moz-placeholder,\ninput:focus::-webkit-input-placeholder {\n  color: transparent;\n}\nbutton::-moz-focus-inner,\ninput::-moz-focus-inner {\n  padding: 0;\n  border: 0;\n}\ntable {\n  border-collapse: collapse;\n  border-spacing: 0;\n}\nblockquote,\nq {\n  quotes: none;\n}\nblockquote:before,\nblockquote:after,\nq:before,\nq:after {\n  content: '';\n  content: none;\n}\nimg {\n  vertical-align: middle;\n  border: 0;\n  -ms-interpolation-mode: bicubic;\n}\nins {\n  text-decoration: none;\n}\ndel {\n  text-decoration: line-through;\n}\nheader,\nfooter,\narticle,\nsection,\nnav,\nmenu,\nhgroup {\n  display: block;\n  clear: all;\n}\n.fl {\n  float: left;\n}\n.fr {\n  float: right;\n}\n.hide {\n  display: none !important;\n}\n.show {\n  display: block;\n}\n.ellipsis {\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n.break {\n  word-break: break-all;\n  word-wrap: break-word;\n}\n.clearfix:before,\n.clearfix:after {\n  content: \"\";\n  display: table;\n}\n.clearfix:after {\n  clear: both;\n}\n.clearfix {\n  *zoom: 1;\n}\n", ""]);
+	exports.push([module.id, "@charset \"utf-8\";\n/*********************************\n **@description  : base style\n **@author   \t\t : zony \n **@date     \t\t : 2016-09-08\n ********************************/\nbody,\nnav,\ndl,\ndt,\ndd,\np,\nh1,\nh2,\nh3,\nh4,\nul,\nol,\nli,\ninput,\nbutton,\ntextarea,\nheader,\nfooter {\n  margin: 0;\n  padding: 0;\n}\nbody {\n  font: 16px/1.5 'Microsoft Yahei';\n  color: #333;\n  background: #fff;\n  -webkit-text-size-adjust: none;\n  min-width: 320px;\n}\nform {\n  display: inline;\n}\nul,\nol {\n  list-style: none;\n}\na {\n  text-decoration: none;\n  color: #1a1a1a;\n}\na:hover,\na:active,\na:focus {\n  color: #1c5aa2;\n  text-decoration: none;\n}\na:active {\n  color: #aaa;\n}\nbutton,\ninput,\nselect,\ntextarea {\n  font-size: 100%;\n  vertical-align: middle;\n  outline: none;\n}\ntextarea {\n  resize: none;\n}\nbutton,\ninput[type=\"button\"],\ninput[type=\"reset\"],\ninput[type=\"submit\"] {\n  cursor: pointer;\n  -webkit-appearance: button;\n  -moz-appearance: button;\n}\ninput:focus:-moz-placeholder,\ninput:focus::-webkit-input-placeholder {\n  color: transparent;\n}\nbutton::-moz-focus-inner,\ninput::-moz-focus-inner {\n  padding: 0;\n  border: 0;\n}\ntable {\n  border-collapse: collapse;\n  border-spacing: 0;\n}\nblockquote,\nq {\n  quotes: none;\n}\nblockquote:before,\nblockquote:after,\nq:before,\nq:after {\n  content: '';\n  content: none;\n}\nimg {\n  vertical-align: middle;\n  border: 0;\n  -ms-interpolation-mode: bicubic;\n}\nins {\n  text-decoration: none;\n}\ndel {\n  text-decoration: line-through;\n}\nheader,\nfooter,\narticle,\nsection,\nnav,\nmenu,\nhgroup {\n  display: block;\n  clear: all;\n}\n.fl {\n  float: left;\n}\n.fr {\n  float: right;\n}\n.hide {\n  display: none !important;\n}\n.show {\n  display: block;\n}\n.ellipsis {\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  overflow: hidden;\n}\n.break {\n  word-break: break-all;\n  word-wrap: break-word;\n}\n.clearfix:before,\n.clearfix:after {\n  content: \"\";\n  display: table;\n}\n.clearfix:after {\n  clear: both;\n}\n.clearfix {\n  *zoom: 1;\n}\n.prohibitSelect {\n  moz-user-select: -moz-none;\n  -moz-user-select: none;\n  -o-user-select: none;\n  -khtml-user-select: none;\n  -webkit-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n", ""]);
 
 	// exports
 
@@ -20101,7 +20144,7 @@
 
 
 	// module
-	exports.push([module.id, "html,\nbody {\n  width: 100%;\n  height: 100%;\n}\n#login-box {\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  overflow: hidden;\n}\n.center-box {\n  width: 100%;\n  max-width: 400px;\n  margin: 0 auto;\n  height: 300px;\n  position: relative;\n  top: 50%;\n  margin-top: -150px;\n}\n.login-box {\n  font-size: 14px;\n}\n.login-box input {\n  padding: 8px 5px;\n  width: 70%;\n}\n.login-box button {\n  width: 20%;\n  margin-left: 5%;\n  padding: 8px 5px;\n}\n.login-box div {\n  text-align: left;\n  color: #fff;\n  padding: 3px;\n  height: 27px;\n}\n.login-box div span {\n  display: inline-block;\n  padding: 3px 10px;\n  background-color: rgba(23, 23, 23, 0.5);\n}\n.login-box p {\n  text-align: right;\n}\n.login-box p .sign-sa {\n  cursor: pointer;\n  padding-left: 5px;\n  color: #1262F4;\n  display: inline-block;\n  width: 50px;\n}\n.pwd-box {\n  width: 300px;\n  height: 300px;\n  border: 1px solid #ccc;\n}\n.pwd-box span {\n  color: #000;\n  display: inline-block;\n  width: 60px;\n  height: 60px;\n  margin: 60px 0;\n}\n.pwd-box span:nth-child(3n+2) {\n  margin: 60px 60px;\n}\n", ""]);
+	exports.push([module.id, "html,\nbody {\n  width: 100%;\n  height: 100%;\n}\n#login-box {\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  overflow: hidden;\n}\n.center-box {\n  width: 100%;\n  max-width: 400px;\n  margin: 0 auto;\n  height: 300px;\n  position: relative;\n  top: 50%;\n  margin-top: -150px;\n}\n.login-box {\n  font-size: 14px;\n}\n.login-box input {\n  padding: 8px 5px;\n  width: 70%;\n}\n.login-box button {\n  width: 20%;\n  margin-left: 5%;\n  padding: 8px 5px;\n}\n.login-box div {\n  text-align: left;\n  color: #fff;\n  padding: 3px;\n  height: 27px;\n}\n.login-box div span {\n  display: inline-block;\n  padding: 3px 10px;\n  background-color: rgba(23, 23, 23, 0.5);\n}\n.login-box p {\n  text-align: right;\n}\n.login-box p .sign-sa {\n  cursor: pointer;\n  padding-left: 5px;\n  color: #1262F4;\n  display: inline-block;\n  width: 50px;\n}\n.pwd-box {\n  width: 300px;\n  height: 300px;\n}\n.pwd-box span {\n  color: #000;\n  display: inline-block;\n  width: 60px;\n  height: 60px;\n  text-align: center;\n  box-sizing: border-box;\n  background-color: rgba(118, 118, 118, 0.7);\n  border-radius: 50%;\n  cursor: pointer;\n}\n.pwd-box span:nth-child(3n+2) {\n  margin: 0 60px;\n}\n.pwd-box span:nth-child(n+4) {\n  margin-top: 60px;\n}\n", ""]);
 
 	// exports
 
