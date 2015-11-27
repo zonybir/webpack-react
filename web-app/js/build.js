@@ -19669,11 +19669,13 @@
 			this.date.userName=e.target.value;		
 		},
 		handleNextStep:function(){
-			if(!this.date.userName) this.setState({showErr:true,err_info:'Please input your name.'});
-			else if(!this.checkuserNmae()) var a=0;
+			if(!this.date.userName) this.setState({showErr:true,err_info:'Please press zonybir to login in' });
+			else if(this.checkuserNmae()) {
+				this.render=this.pwd;
+			}
 		},
 		handSignUp:function(e){
-			this.render=this.pwd;
+			
 			this.setState({showErr:false});
 			return this.state.signIn?this.setState({signIn:false}):this.setState({signIn:true});
 		},
@@ -19689,6 +19691,7 @@
 		passwordKey:{
 			key:[],
 			status:false,
+			endStatus:true,
 			setKey:function(key){
 				this.key.push(key);
 			},
@@ -19703,41 +19706,115 @@
 				}
 			}
 		},
-		handlePwdSec:function(e){
+		handlePwdNext:function(e){
 			if(!this.passwordKey.status) return;
+			
 			if(this.passwordKey.hasKey(e.target.getAttribute('value'))) return;
+			else {
+				console.log(1111);
+				this.lineDate.startPoint={
+					x:e.pageX,
+					y:e.pageY
+				};
+				var firstKey=parseInt(e.target.getAttribute('value'),10),
+				col=Math.ceil(firstKey/3)-1,
+				row=firstKey-(col*3+1),
+				x=row*120+30,
+				y=col*120+30;
+				this.lineDate.canvasPoint={
+					x:x,
+					y:y
+				}
+				this.lineDate.path.push(this.lineDate.canvasPoint);
+				
+			}
 			//console.log(this.passwordKey.key);
 			
 		},
 		handlePwdStart:function(e){
+			if (this.passwordKey.endStatus) this.passwordKey.endStatus=false;
+			else return;
+			this.canvasInit();
 			this.passwordKey.status=true;
 			this.passwordKey.hasKey(e.target.getAttribute('value'));
 			this.lineDate.startPoint={
 				x:e.pageX,
 				y:e.pageY
 			};
+			var firstKey=parseInt(e.target.getAttribute('value'),10),
+			col=Math.ceil(firstKey/3)-1,
+			row=firstKey-(col*3+1),
+			x=row*120+30,
+			y=col*120+30;
+			this.lineDate.canvasPoint={
+				x:x,
+				y:y
+			};
+			this.lineDate.path.push(this.lineDate.canvasPoint);
+			this.lineDate.context.moveTo(x,y);
 			//console.log(e.pageX+'---'+e.pageY);
 			
 		},
 		handleResetPwd:function(){
-			this.passwordKey.status=false;
+			if(this.passwordKey.status) this.passwordKey.status=false;
+			else return;
+			this.lineDate.context.closePath();
+			this.lineDate.context.clearRect(0,0,300,300);
+
+			this.lineDate.context.beginPath();
+			this.lineDate.beforLine();
+			this.lineDate.context.stroke();
+
+			//模拟 ajax 验证密码
+			var t=this;
+			setTimeout(function(){
+				t.passwordKey.endStatus=true;
+				t.lineDate.context.closePath();
+				t.lineDate.context.clearRect(0,0,300,300);
+				t.passwordKey.key=[];
+				t.lineDate.path=[];
+				alert('密码错误！！请重新输入');
+			},3000);
 		},
 		lineDate:{
+			context:'',
 			startPoint:{
 				x:0,
 				y:0
+			},
+			canvasPoint:{
+				x:0,
+				y:0
+			},
+			path:[],
+			beforLine:function(){
+				var t=this;
+				this.path.map(function(key,index,arry){
+					t.context.lineTo(key.x,key.y);
+				})
+			},
+			drawLine:function(x,y){
+				this.context.closePath();
+				this.context.clearRect(0,0,300,300);
+				this.context.beginPath();
+				this.beforLine();
+				this.context.moveTo(this.canvasPoint.x,this.canvasPoint.y);
+				this.context.lineTo(x,y);
+				this.context.stroke();
 			}
 		},
 		handleDrawLine:function(e){
 			if (!this.passwordKey.status) return;
 			var bx=e.pageX - this.lineDate.startPoint.x,
-			by=e.pageY = this.lineDate.startPoint.y;
-			console.log(bx+'---'+by);
+			by=e.pageY - this.lineDate.startPoint.y;
+			var x=bx+this.lineDate.canvasPoint.x;
+			var y=by+this.lineDate.canvasPoint.y;
+			this.lineDate.drawLine(x,y);
 		},
 		render:function(){
 			var display = this.state.showErr ? 'show' : 'hide',
 			 rule={};
-			rule= this.state.signIn?{placeholder:'enter your name',title:'without',signAs:'sign up',btn_text:'Next'}:{placeholder:'sign up name',title:'hava a',signAs:'sign in',btn_text:'Sign Up'};
+			rule= this.state.signIn?{placeholder:'please input zony',title:'without',signAs:'sign up',btn_text:'Next'}:{placeholder:'sign up name',title:'hava a',signAs:'sign in',btn_text:'Sign Up'};
 			return (
 				React.createElement("div", {className: "login-box"}, 
 					React.createElement("input", {onChange: this.handleInput, placeholder: rule.placeholder}), 
@@ -19747,13 +19824,20 @@
 				)
 			);
 		},
+		canvasInit:function(){
+			var c=this.lineDate.context=document.getElementById('pwdLine').getContext("2d");
+			c.strokeStyle='#f00';
+			c.fillStyle='#ccc';
+			c.lineWidth='10';
+		},
 		pwd:function(){
-			var bb=[1,2,3,4,5,6,7,8,9],t=this;
+			var key=[1,2,3,4,5,6,7,8,9],t=this;
 			return(
-				React.createElement("div", {className: "login-box pwd-box", onMouseUp: this.handleResetPwd, onMouseMove: this.handleDrawLine}, 
-					bb.map(function(value,index,arry){
-						return React.createElement("span", {className: "prohibitSelect", onMouseEnter: t.handlePwdSec, onMouseDown: t.handlePwdStart, value: value})
-					})
+				React.createElement("div", {className: "login-box pwd-box", onMouseUp: this.handleResetPwd, onMouseMove: this.handleDrawLine, onMouseLeave: this.handleResetPwd}, 
+					key.map(function(value,index,arry){
+						return React.createElement("span", {className: "prohibitSelect", onMouseEnter: t.handlePwdNext, onMouseDown: t.handlePwdStart, value: value})
+					}), 
+					React.createElement("canvas", {id: "pwdLine", width: "300px", height: "300px"}, "your mus update your brower wo continue use.")
 				)
 			)
 		}
@@ -20144,7 +20228,7 @@
 
 
 	// module
-	exports.push([module.id, "html,\nbody {\n  width: 100%;\n  height: 100%;\n}\n#login-box {\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  overflow: hidden;\n}\n.center-box {\n  width: 100%;\n  max-width: 400px;\n  margin: 0 auto;\n  height: 300px;\n  position: relative;\n  top: 50%;\n  margin-top: -150px;\n}\n.login-box {\n  font-size: 14px;\n}\n.login-box input {\n  padding: 8px 5px;\n  width: 70%;\n}\n.login-box button {\n  width: 20%;\n  margin-left: 5%;\n  padding: 8px 5px;\n}\n.login-box div {\n  text-align: left;\n  color: #fff;\n  padding: 3px;\n  height: 27px;\n}\n.login-box div span {\n  display: inline-block;\n  padding: 3px 10px;\n  background-color: rgba(23, 23, 23, 0.5);\n}\n.login-box p {\n  text-align: right;\n}\n.login-box p .sign-sa {\n  cursor: pointer;\n  padding-left: 5px;\n  color: #1262F4;\n  display: inline-block;\n  width: 50px;\n}\n.pwd-box {\n  width: 300px;\n  height: 300px;\n}\n.pwd-box span {\n  color: #000;\n  display: inline-block;\n  width: 60px;\n  height: 60px;\n  text-align: center;\n  box-sizing: border-box;\n  background-color: rgba(118, 118, 118, 0.7);\n  border-radius: 50%;\n  cursor: pointer;\n}\n.pwd-box span:nth-child(3n+2) {\n  margin: 0 60px;\n}\n.pwd-box span:nth-child(n+4) {\n  margin-top: 60px;\n}\n", ""]);
+	exports.push([module.id, "html,\nbody {\n  width: 100%;\n  height: 100%;\n}\n#login-box {\n  width: 100%;\n  height: 100%;\n  text-align: center;\n  overflow: hidden;\n}\n.center-box {\n  width: 100%;\n  max-width: 400px;\n  margin: 0 auto;\n  height: 300px;\n  position: relative;\n  top: 50%;\n  margin-top: -150px;\n}\n.login-box {\n  font-size: 14px;\n}\n.login-box input {\n  padding: 8px 5px;\n  width: 70%;\n}\n.login-box button {\n  width: 20%;\n  margin-left: 5%;\n  padding: 8px 5px;\n}\n.login-box div {\n  text-align: left;\n  color: #fff;\n  padding: 3px;\n  height: 27px;\n}\n.login-box div span {\n  display: inline-block;\n  padding: 3px 10px;\n  background-color: rgba(23, 23, 23, 0.5);\n}\n.login-box p {\n  text-align: right;\n}\n.login-box p .sign-sa {\n  cursor: pointer;\n  padding-left: 5px;\n  color: #1262F4;\n  display: inline-block;\n  width: 50px;\n}\n.pwd-box {\n  width: 300px;\n  height: 300px;\n  position: relative;\n}\n.pwd-box span {\n  color: #000;\n  display: inline-block;\n  width: 60px;\n  height: 60px;\n  text-align: center;\n  box-sizing: border-box;\n  background-color: rgba(118, 118, 118, 0.7);\n  border-radius: 50%;\n  cursor: pointer;\n  position: relative;\n  z-index: 2;\n}\n.pwd-box span:nth-child(3n+2) {\n  margin: 0 60px;\n}\n.pwd-box span:nth-child(n+4) {\n  margin-top: 60px;\n}\n.pwd-box canvas {\n  position: absolute;\n  top: 0;\n  left: 0;\n  z-index: 0;\n}\n", ""]);
 
 	// exports
 
